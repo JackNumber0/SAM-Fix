@@ -7,20 +7,41 @@ object Main {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        print("Input Location: ")
-        val input = readLine()
-        print("Output Location: ")
-        val output = readLine()
+        var input: String = "";
+        var output: String = "";
 
-        println("Modifying lines...")
+        for (i in 0 until args.size) {
+            if (args[i] == "-i") {
+                input = args[i+1]
+            }
+            if (args[i] == "-o") {
+                output = args[i+1]
+            }
+        }
+        
+        if(input == "" || output == "") {
+            println("Input and/or output are not defined")
+            println("Correct usage: -i INPUT_LOCATION -o OUTPUT_LOCATION")
+            System.exit(0)
+        } else {
+            println("Input location: " + input)
+            println("Output location: " + output)
+            println("Shifting lines...")
+            //println("Confirmation (Y/N): ")
+            //val confirm = readLine()
+            //if (confirm == "Y" || confirm == "y") println("Shifting lines...")
+            //else System.exit(0)
+        }
 
         val fw = FileWriter(output)
         val start = System.currentTimeMillis()
         var x = 1
+        //var y = 0
 
         File(input).forEachLine {
             var tempStr = it
             val list: MutableList<String> = ArrayList()
+            //val s = System.nanoTime()
 
             for (i in 0 until it.length - it.replace("\t", "").length) {
                 list.add(tempStr.substring(0, tempStr.indexOf("\t")))
@@ -77,6 +98,9 @@ object Main {
             }
 
             fw.write("\n")
+            //val f = System.nanoTime()
+            //println("Completed line: " + x + ", running at: " + 1000000000 / (f - s) + " lines per second")
+            //y += (1000000000 / (f - s)).toInt()
             x += 1
         }
 
@@ -85,6 +109,7 @@ object Main {
         val elapsed = finish / 1000f
         if (x-1 != 0) {
             println("All lines complete, time elapsed: " + elapsed + " seconds")
+            //println("Average rate: " + y/(x-1) + " lines per second")
         } else {
             println("Input file is empty")
         }
